@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/openaplis/ap-mysql-builder/issues"
   },
-  "homepage": "https://github.com/openaplis/ap-mysql-builder#readme"
+  "homepage": "https://github.com/openaplis/ap-mysql-builder#readme",
+  "dependencies": {
+    "ap-gateway": "*"
+  }
 }
