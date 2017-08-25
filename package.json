@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/openaplis/ap-mysql-builder#readme",
   "dependencies": {
-    "ap-mysql": "0.0.51",
     "ap-protobuf": "0.0.43",
     "async": "^2.5.0",
     "bson-objectid": "^1.1.5",
-    "grpc": "^1.4.1"
+    "grpc": "^1.4.1",
+    "mysql": "^2.14.1"
   }
 }

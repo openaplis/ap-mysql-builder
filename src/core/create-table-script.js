@@ -1,11 +1,14 @@
 'use strict'
 
 var _ = require('lodash')
-var camelCase = require('./camel-case')
 const async = require('async')
 const path = require('path')
-const cmdSubmitter = require(path.join(__dirname, 'cmd-submitter'))
 const fs = require('fs')
+
+const grpc = require('grpc')
+const PROTO_PATH = path.join(__dirname, '../../node_modules/ap-protobuf/src/core/gateway.proto')
+const gateway_proto = grpc.load(PROTO_PATH).gateway
+const mysqlGateway = new gateway_proto.MySQLGateway(process.env.AP_GATEWAY_SERVICE_BINDING, grpc.credentials.createInsecure())
 
 var script = ''
 var data = null
@@ -17,7 +20,7 @@ function setPriority() {
       table.priority = table.priority + 1
     }
     else {table.priority = 1}
-    
+
     if(table.referenceTables !== null) {
       _.each(table.referenceTables, function(refTable) {
         var needTable = _.find(data, function(obj) {return obj.tableName == refTable.tableName})
@@ -31,31 +34,42 @@ function setPriority() {
 
 var self = module.exports = {
   getTableList: function(callback) {
-    var sql = ['SELECT TABLE_NAME tableName from INFORMATION_SCHEMA.TABLES ',
+    var cmdSubmitterRequest = {
+      sql: ['SELECT TABLE_NAME tableName from INFORMATION_SCHEMA.TABLES ',
       'where TABLE_SCHEMA = \'lis\' and TABLE_NAME like \'tbl%\';'].join('\n')
+    }
 
-    cmdSubmitter.submit(sql, function(err, result) {
+    mysqlGateway.submitCmd(cmdSubmitterRequest, function (err, result) {
       if(err) return callback(err)
-      callback(null, result)
+      var data = result.json
+      var rows = JSON.parse(data)
+      callback(null, rows)
     })
   },
 
   getForeignKeyConstraintTables: function(tableName, callback) {
-    var sql = ['SELECT REFERENCED_TABLE_NAME tableName from INFORMATION_SCHEMA.KEY_COLUMN_USAGE',
-      ' where TABLE_SCHEMA = \'lis\' and CONSTRAINT_NAME like \'fk%\'',
-      'and TABLE_NAME = \'', tableName, '\';'].join('')
+    var cmdSubmitterRequest = {
+      sql: ['SELECT REFERENCED_TABLE_NAME tableName from INFORMATION_SCHEMA.KEY_COLUMN_USAGE',
+        ' where TABLE_SCHEMA = \'lis\' and CONSTRAINT_NAME like \'fk%\'',
+        'and TABLE_NAME = \'', tableName, '\';'].join('')
+    }
 
-    cmdSubmitter.submit(sql, function(err, result) {
+    mysqlGateway.submitCmd(cmdSubmitterRequest, function (err, result) {
       if(err) return callback(err)
-      callback(null, result)
+      var data = result.json
+      var rows = JSON.parse(data)
+      callback(null, rows)
     })
   },
 
   getCreateTableStatement: function(tableName, callback) {
-    var sql = 'show create table ' + tableName + ';'
-    cmdSubmitter.submit(sql, function(err, result) {
+    var cmdSubmitterRequest = { sql: 'show create table ' + tableName + ';' }
+
+    mysqlGateway.submitCmd(cmdSubmitterRequest, function (err, result) {
       if(err) return callback(err)
-      callback(null, result)
+      var data = result.json
+      var rows = JSON.parse(data)
+      callback(null, rows)
     })
   },
 
@@ -74,7 +88,7 @@ var self = module.exports = {
         async.eachSeries(data, function(table, callback) {
           self.getCreateTableStatement(table['tableName'], function(err, result) {
             if(err) return callback(err)
-            table.sql = result[0]['Create Table']
+            table.sql = result[0]['create Table']
             callback()
           })
         }, function(err) {
