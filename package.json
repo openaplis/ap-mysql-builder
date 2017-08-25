@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/openaplis/ap-mysql-builder#readme",
   "dependencies": {
-    "ap-protobuf": "0.0.43",
+    "ap-protobuf": "*",
     "async": "^2.5.0",
     "bson-objectid": "^1.1.5",
     "grpc": "^1.4.1",

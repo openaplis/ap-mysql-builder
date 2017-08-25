@@ -7,7 +7,7 @@ const path = require('path')
 const fs = require('fs')
 
 var dbName = 'test_mysql'
-var tables = null
+var tables = []
 
 const grpc = require('grpc')
 const PROTO_PATH = path.join(__dirname, '../../node_modules/ap-protobuf/src/core/gateway.proto')
