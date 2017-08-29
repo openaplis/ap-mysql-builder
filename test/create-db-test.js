@@ -8,10 +8,11 @@ const fs = require('fs')
 describe('Create Database Test', function() {
 
   it('Create Test', function(done) {
-    this.timeout(20000)
-    createdb.createDatabase(path.join(__dirname, 'tableScript.json'), function(err, result) {
+    this.timeout(50000)
+    var dbNames = ['test_mysql', 'test_two']
+    createdb.createDatabase(dbNames, function(err, result) {
       if(err) return console.log(err)
-      assert.equal(result, 0)
+      assert.equal(result, 'Success')
       done()
     })
   })

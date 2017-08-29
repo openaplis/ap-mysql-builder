@@ -117,6 +117,12 @@ var self = module.exports = {
     callback(null, result)
   },
 
+  booleanIntGenerator: function(key, callback) {
+    var chance = new Chance(key)
+    var result = chance.pickone([0, 1])
+    callback(null, result)
+  },
+
   trueIntGenerator: function(key, callback) {
     callback(null, 1)
   },
@@ -147,7 +153,20 @@ var self = module.exports = {
     var chance = new Chance(key)
     var result = chance.pickone(['321', '322', '323', '324'])
     callback(null, result)
-  }
+  },
+
+  distributionTypeGenerator: function(key, callback) {
+    var chance = new Chance(key)
+    var result = chance.pickone(['Athena Health', 'Eclinical Works', 'EPIC', 'EPIC and Fax', 'Fax', 'Meditech', 'MTDOH', 'Print', 'Web Service', 'Web Service and Fax', 'WYDOH'])
+    callback(null, result)
+  },
+
+
+  facilityTypeGenerator: function(key, callback) {
+    var chance = new Chance(key)
+    var result = chance.pickone(['Non-Hospital', 'Hospital Owned Clinic', 'Hospital', 'Non-Grandfathered Hospital'])
+    callback(null, result)
+  },
 }
 
 function formattedDateString(date) {

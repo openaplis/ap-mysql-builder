@@ -215,4 +215,32 @@ describe('Data Generatior Tests', function() {
       done()
     })
   })
+
+  it('booleanInt Generator Generator Test', function(done) {
+    dataGenerator.runGenerator('booleanIntGenerator', key, function(err, result) {
+      if(err) return console.log(err)
+      console.log(result)
+      assert.isNotNull(result)
+      done()
+    })
+  })
+
+  it('distributionType Generator Test', function(done) {
+    dataGenerator.runGenerator('distributionTypeGenerator', key, function(err, result) {
+      if(err) return console.log(err)
+      console.log(result)
+      assert.isNotNull(result)
+      done()
+    })
+  })
+
+
+  it('facilityType Generator Test', function(done) {
+    dataGenerator.runGenerator('facilityTypeGenerator', key, function(err, result) {
+      if(err) return console.log(err)
+      console.log(result)
+      assert.isNotNull(result)
+      done()
+    })
+  })
 })
