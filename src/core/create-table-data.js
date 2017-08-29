@@ -46,6 +46,21 @@ var self = module.exports = {
         if(err) return callback(err)
         callback(null, ids)
     })
+  },
+
+  generateIntIds: function(startWith, howMany, callback) {
+    var ids = []
+    var limit = 0
+    async.whilst( function() { return limit < howMany },
+      function(callback) {
+          var id = limit + startWith
+          ids.push(id)
+          limit = limit + 1
+          callback()
+      }, function(err) {
+        if(err) return callback(err)
+        callback(null, ids)
+    })
   }
 }
 
